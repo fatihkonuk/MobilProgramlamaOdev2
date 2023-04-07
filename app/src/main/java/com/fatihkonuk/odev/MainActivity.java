@@ -19,10 +19,12 @@ public class MainActivity extends AppCompatActivity {
     Button fk_textColorBtn,fk_fontBtn,fk_bgColorBtn,fk_changeBtn,fk_randomBtn;
     Spinner fk_colorSpinner,fk_bgSpinner;
     EditText fk_fontSizeView;
+    String[] fk_colorCodes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Text Views
         fk_txt1 = findViewById(R.id.txt1);
         fk_txt2 = findViewById(R.id.txt2);
         fk_txt3 = findViewById(R.id.txt3);
@@ -35,8 +37,10 @@ public class MainActivity extends AppCompatActivity {
         //Spinner
         fk_colorSpinner = findViewById(R.id.colorSpinner);
         fk_bgSpinner = findViewById(R.id.bgSpinner);
+        //Edit Text
         fk_fontSizeView = findViewById(R.id.fontSizeView);
-
+        //List
+        fk_colorCodes = getResources().getStringArray(R.array.colorCodeList);
 
         // Color Spinner
         ArrayAdapter<CharSequence> fk_colorAdapter = ArrayAdapter.createFromResource(
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         );
         fk_colorSpinner.setAdapter(fk_colorAdapter);
 
-        // BG Spinner
+        // Background Spinner
         ArrayAdapter<CharSequence> fk_bgAdapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.colorNameList,
@@ -54,12 +58,11 @@ public class MainActivity extends AppCompatActivity {
         );
         fk_bgSpinner.setAdapter(fk_bgAdapter);
 
-        //Text Color Change
+        //Yazı Rengini Değiştir
         fk_textColorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] fk_colorCodes = getResources().getStringArray(R.array.colorCodeList);
-                int fk_index = fk_colorSpinner.getSelectedItemPosition();
+                int fk_index = fk_colorSpinner.getSelectedItemPosition(); //Spinnerdan seçilen rengin index değeri
                 String fk_code = "#"+fk_colorCodes[fk_index];
                 int fk_color = Color.parseColor(fk_code);
                 fk_txt1.setTextColor(fk_color);
@@ -68,12 +71,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Background Color Change
+        //Arka Plan Rengini Değiştir
         fk_bgColorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] fk_colorCodes = getResources().getStringArray(R.array.colorCodeList);
-                int fk_index = fk_bgSpinner.getSelectedItemPosition();
+                int fk_index = fk_bgSpinner.getSelectedItemPosition(); //Spinnerdan seçilen rengin index değeri
                 String fk_code = "#"+fk_colorCodes[fk_index];
                 int fk_color = Color.parseColor(fk_code);
                 fk_txt1.setBackgroundColor(fk_color);
@@ -82,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Font Size Change
+        // Font Büyüklüğünü Değiştir
         fk_fontBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String fk_value = fk_fontSizeView.getText().toString();
-                if (fk_value.isEmpty()) {
+                if (fk_value.isEmpty()) { // Font Büyüklüğü Girilmediyse Hata Mesajı Dön
                     Context fk_context = getApplicationContext();
-                    CharSequence fk_text = "Bir Değer Girin!";
+                    CharSequence fk_text = "Lütfen Bir Değer Girin!";
                     int fk_duration = Toast.LENGTH_SHORT;
 
                     Toast toast = Toast.makeText(fk_context, fk_text, fk_duration);
@@ -103,43 +105,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Change All
+        // Hepsini Değiştir
         fk_changeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Bütün butonlara tıklama işlemi ile renk ve font büyüklüğünü değiştir
                 fk_textColorBtn.callOnClick();
                 fk_bgColorBtn.callOnClick();
                 fk_fontBtn.callOnClick();
             }
         });
 
-        // Random Change
+        // Hepsini Rastgele Değiştir
         fk_randomBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fk_txt1.setTextColor(fk_GetRandomColor());
-                fk_txt1.setBackgroundColor(fk_GetRandomColor());
-                fk_txt1.setTextSize(fk_GetRandomFontSize());
-
-                fk_txt2.setTextColor(fk_GetRandomColor());
-                fk_txt2.setBackgroundColor(fk_GetRandomColor());
-                fk_txt2.setTextSize(fk_GetRandomFontSize());
-
-                fk_txt3.setTextColor(fk_GetRandomColor());
-                fk_txt3.setBackgroundColor(fk_GetRandomColor());
-                fk_txt3.setTextSize(fk_GetRandomFontSize());
+                TextView[] tvList = {fk_txt1,fk_txt2,fk_txt3};
+                for (TextView tv :tvList) {
+                    tv.setTextColor(fk_GetRandomColor());
+                    tv.setBackgroundColor(fk_GetRandomColor());
+                    tv.setTextSize(fk_GetRandomFontSize());
+                }
             }
         });
     }
 
+    //Rastgele Renk Oluştur
     public int fk_GetRandomColor() {
-        String[] fk_colorList = getResources().getStringArray(R.array.colorCodeList);
         Random fk_random = new Random();
-        int fk_index = fk_random.nextInt(fk_colorList.length);
-        String fk_code = "#"+fk_colorList[fk_index];
+        int fk_index = fk_random.nextInt(fk_colorCodes.length);
+        String fk_code = "#"+fk_colorCodes[fk_index];
         int color = Color.parseColor(fk_code);
         return color;
     }
+    //Rastgele Font Büyüklüğü Oluştur
     public int fk_GetRandomFontSize() {
         Random fk_random = new Random();
         int fk_size = fk_random.nextInt(30)+10;
